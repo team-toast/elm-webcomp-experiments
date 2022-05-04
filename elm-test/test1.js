@@ -5,9 +5,19 @@ const { Elm } = require("./Incrementor.elm");
 
 let togglePorts = [];
 let incrementPorts = [];
+let incrementPort2;
 let sendTogglePorts = [];
 
 elmWebComponents.configure("0.19");
+
+elmWebComponents.register("elm-incrementor-component", Elm.Incrementor, {
+    setupPorts: ports => {
+        incrementPorts.push(ports.receiveIncrement)
+    },
+    onDetached: () => {
+        console.log("this component is being removed from the DOM now");
+    },
+});
 
 elmWebComponents.register("elm-toggle-component", Elm.ToggleComponent, {
     setupPorts: ports => {
@@ -25,14 +35,15 @@ elmWebComponents.register("elm-toggle-component2", Elm.ToggleComponent, {
     },
 });
 
-elmWebComponents.register("elm-incrementor-component", Elm.Incrementor, {
+elmWebComponents.register("elm-toggle-component3", Elm.ToggleComponent, {
     setupPorts: ports => {
-        incrementPorts.push(ports.receiveIncrement)
-    },
-    onDetached: () => {
-        console.log("this component is being removed from the DOM now");
+        togglePorts.push(ports.receiveToggle); 
+        ports.sendToggle.subscribe(function(message){console.log(message); incrementPorts[2].send(1)}
+        )
     },
 });
+
+
 
 const button1 = document.getElementById('toggle1')
 button1.addEventListener('click', () => {
