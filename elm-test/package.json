@@ -1,0 +1,15 @@
+{
+  "name": "test1",
+  "version": "1.0.0",
+  "description": "",
+  "main": "test1.js",
+  "scripts": {
+    "test1": "webpack-dev-server"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "elm-webpack-loader": "^5.0.0"
+  }
+}
