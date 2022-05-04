@@ -1,7 +1,8 @@
 port module ToggleComponent exposing (main)
 
 import Browser
-import Html exposing (Html, button, div, text)
+import Html exposing (..)
+import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 import Svg exposing (..)
 import Svg.Attributes exposing (..)
@@ -13,10 +14,12 @@ main =
   , view = view
   , subscriptions = subscriptions }
 
+
 -- PORTS
 
 port receiveToggle : (Int -> msg) -> Sub msg
 port sendToggle : String -> Cmd msg
+
 
 -- MODEL
 
@@ -30,6 +33,8 @@ init flags = ( {counter = 0, rectColor = "blue"}, Cmd.none )
 subscriptions : Model -> Sub Msg
 subscriptions model =
     receiveToggle ReceiveToggle
+
+
 -- UPDATE
 
 type Msg
@@ -55,20 +60,21 @@ colorSelector count =
 
 -- VIEW
 
+
 view : Model -> Html Msg
 view model =
-  div[]
+  div[Html.Attributes.style "height" "70px"]
   [svg
     [ viewBox "0 0 400 400"
-    , width "400"
-    , height "400"
+    , Svg.Attributes.width "400"
+    , Svg.Attributes.height "400"
     ]
     [
         rect
         [ x "10"
         , y "10"
-        , width "40"
-        , height "40"
+        , Svg.Attributes.width "40"
+        , Svg.Attributes.height "40"
         , fill model.rectColor
         , stroke "black"
         , strokeWidth "2"

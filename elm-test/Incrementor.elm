@@ -8,7 +8,8 @@ port module Incrementor exposing (..)
 
 
 import Browser
-import Html exposing (Html, button, div, text)
+import Html exposing (..)
+import Html.Attributes exposing (..)
 import Html.Events exposing (onClick)
 
 
@@ -71,7 +72,7 @@ update msg model =
 
 view : Model -> Html Msg
 view model =
-  div []
+  div [style "height" "75px"]
     [ button [ onClick (Decrement 1)] [ text "-" ]
     , div [] [ text (String.fromInt model) ]
     , button [ onClick (Increment 1)] [ text "+" ]
