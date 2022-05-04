@@ -20,7 +20,7 @@ module.exports = {
           cwd: path.resolve(__dirname),
           files: [
             path.resolve(__dirname, 'ToggleComponent.elm'),
-            //path.resolve(__dirname, 'ComponentWithPorts.elm'),
+            path.resolve(__dirname, 'Incrementor.elm'),
             //path.resolve(__dirname, 'ComponentWithStaticProp.elm'),
           ],
         },

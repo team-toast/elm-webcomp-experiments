@@ -1,4 +1,4 @@
-module ToggleComponent exposing (..)
+port module ToggleComponent exposing (main)
 
 import Browser
 import Html exposing (Html, button, div, text)
@@ -7,35 +7,42 @@ import Svg exposing (..)
 import Svg.Attributes exposing (..)
 
 main =
-  Browser.sandbox { init = init, update = update, view = view }
+  Browser.element 
+  { init = init
+  , update = update
+  , view = view
+  , subscriptions = subscriptions }
 
+-- PORTS
 
+port receiveToggle : (Int -> msg) -> Sub msg
+port sendToggle : String -> Cmd msg
 
 -- MODEL
 
-
 type alias Model = {counter : Int, rectColor : String}
 
-
-init : Model
-init =
-  {counter = 0, rectColor = "blue"}
-
+init : () -> ( Model, Cmd Msg )
+init flags = ( {counter = 0, rectColor = "blue"}, Cmd.none )
+  
 
 
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    receiveToggle ReceiveToggle
 -- UPDATE
 
-
 type Msg
-  = Increment
+  = Increment Int
+  | ReceiveToggle Int
 
-
-update : Msg -> Model -> Model
+update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
-    Increment ->
-      {model | counter = model.counter + 1, rectColor = colorSelector model.counter}
-
+    Increment x ->
+      ({model | counter = model.counter + x, rectColor = colorSelector model.counter}, sendToggle "toggled")
+    ReceiveToggle x ->
+      ({model | counter = model.counter + x, rectColor = colorSelector model.counter}, Cmd.none)
 colorSelector : Int -> String
 colorSelector count =
     if  modBy 2 count == 0 then
@@ -45,7 +52,6 @@ colorSelector count =
 
 
 -- VIEW
-
 
 view : Model -> Html Msg
 view model =
@@ -64,7 +70,7 @@ view model =
         , fill model.rectColor
         , stroke "black"
         , strokeWidth "2"
-        , onClick Increment
+        , onClick (Increment 1)
         ]
         []
     ]]
