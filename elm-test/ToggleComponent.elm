@@ -43,6 +43,8 @@ update msg model =
       ({model | counter = model.counter + x, rectColor = colorSelector model.counter}, sendToggle "toggled")
     ReceiveToggle x ->
       ({model | counter = model.counter + x, rectColor = colorSelector model.counter}, Cmd.none)
+
+
 colorSelector : Int -> String
 colorSelector count =
     if  modBy 2 count == 0 then

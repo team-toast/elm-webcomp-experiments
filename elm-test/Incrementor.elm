@@ -1,4 +1,4 @@
-module Incrementor exposing (..)
+port module Incrementor exposing (..)
 
 -- Press buttons to increment and decrement a counter.
 --
@@ -17,8 +17,16 @@ import Html.Events exposing (onClick)
 
 
 main =
-  Browser.sandbox { init = init, update = update, view = view }
+  Browser.element 
+  { init = init
+  , update = update
+  , view = view
+  , subscriptions = subscriptions }
 
+
+-- PORTS
+
+port receiveIncrement : (Int -> msg) -> Sub msg
 
 
 -- MODEL
@@ -26,33 +34,35 @@ main =
 
 type alias Model = Int
 
+init : () -> ( Model, Cmd Msg )
+init flags = ( 0, Cmd.none )
 
-init : Model
-init =
-  0
-
-
-
+subscriptions : Model -> Sub Msg
+subscriptions model =
+    receiveIncrement ReceiveIncrement
 -- UPDATE
 
-
 type Msg
-  = Increment
-  | Decrement
-  | ResetCounter
+  = Increment Int
+  | Decrement Int
+  | ResetCounter Int
+  | ReceiveIncrement Int
 
 
-update : Msg -> Model -> Model
+update : Msg -> Model -> (Model, Cmd Msg)
 update msg model =
   case msg of
-    Increment ->
-      model + 1
+    Increment _ ->
+      (model + 1, Cmd.none)
 
-    Decrement ->
-      model - 1
+    Decrement _ ->
+      (model - 1, Cmd.none)
 
-    ResetCounter ->
-      model - model
+    ResetCounter _ ->
+      (model - model, Cmd.none)
+
+    ReceiveIncrement _ ->
+      (model + 7, Cmd.none)
 
 
 
@@ -62,8 +72,8 @@ update msg model =
 view : Model -> Html Msg
 view model =
   div []
-    [ button [ onClick Decrement ] [ text "-" ]
+    [ button [ onClick (Decrement 1)] [ text "-" ]
     , div [] [ text (String.fromInt model) ]
-    , button [ onClick Increment ] [ text "+" ]
-    , button [ onClick ResetCounter ] [ text "Reset" ]
+    , button [ onClick (Increment 1)] [ text "+" ]
+    , button [ onClick (ResetCounter 1)] [ text "Reset" ]
     ]
