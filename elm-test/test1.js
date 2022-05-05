@@ -14,9 +14,6 @@ elmWebComponents.register("elm-incrementor-component", Elm.Incrementor, {
     setupPorts: ports => {
         incrementPorts.push(ports.receiveIncrement)
     },
-    onDetached: () => {
-        console.log("this component is being removed from the DOM now");
-    },
 });
 
 elmWebComponents.register("elm-toggle-component", Elm.ToggleComponent, {
