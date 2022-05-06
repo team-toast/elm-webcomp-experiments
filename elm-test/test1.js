@@ -1,60 +1,77 @@
 import "core-js/es6/object";
-const elmWebComponents = require("@teamthread/elm-web-components");
-const { Elm } = require("./Incrementor.elm");
+const { Elm } = require("./ToggleComponent.elm");
 //const { Elm } = require("./Incrementor.elm");
 
-let togglePorts = [];
-let incrementPorts = [];
-let incrementPort2;
-let sendTogglePorts = [];
+const camelize = str => {
+  // adapted from https://stackoverflow.com/questions/2970525/converting-any-string-into-camel-case#2970667
+  return str
+    .toLowerCase()
+    .replace(/[-_]+/g, ' ')
+    .replace(/[^\w\s]/g, '')
+    .replace(/ (.)/g, firstChar => firstChar.toUpperCase())
+    .replace(/ /g, '')
+}
 
-elmWebComponents.configure("0.19");
+const getProps = el => {
+  const props = {}
 
-elmWebComponents.register("elm-incrementor-component", Elm.Incrementor, {
-    setupPorts: ports => {
-        incrementPorts.push(ports.receiveIncrement)
-    },
-});
+  for (let i = 0; i < el.attributes.length; i++) {
+    const attribute = el.attributes[i]
+    const name = camelize(attribute.name)
+    props[name] = attribute.value
+  }
+  return props
+}
 
-elmWebComponents.register("elm-toggle-component", Elm.ToggleComponent, {
-    setupPorts: ports => {
-        togglePorts.push(ports.receiveToggle); 
-        ports.sendToggle.subscribe(function(message){console.log(message); incrementPorts[0].send(1)}
-        )
-    },
-});
+class ElmElement extends HTMLElement {
+    constructor() 
+    {
+        super();
+    }
+    connectedCallback() {
 
-elmWebComponents.register("elm-toggle-component2", Elm.ToggleComponent, {
-    setupPorts: ports => {
-        togglePorts.push(ports.receiveToggle); 
-        ports.sendToggle.subscribe(function(message){console.log(message); incrementPorts[1].send(1)}
-        )
-    },
-});
+        const parentDiv = this.attachShadow({mode: 'open'});
 
-elmWebComponents.register("elm-toggle-component3", Elm.ToggleComponent, {
-    setupPorts: ports => {
-        togglePorts.push(ports.receiveToggle); 
-        ports.sendToggle.subscribe(function(message){console.log(message); incrementPorts[2].send(1)}
-        )
-    },
-});
+        const elmDiv = document.createElement('div')
 
+        parentDiv.innerHTML = '<p>Hello</p>'
+        parentDiv.appendChild(elmDiv)
 
+        const elmElement = Elm.ToggleComponent.init({
+        //flags,
+        node: elmDiv,
+        })
+        
+        elmElement.ports.sendToggle.subscribe(() => {
+            this.dispatchEvent(new CustomEvent('mysuperevent',{
+                detail: "Hello",
+                composed: true,
+            }));
+        });
+       
+        } catch (error) {
+        if (onSetupError) {
+            onSetupError(error, context)
+        } else {
+            console.error(
+            `Error from elm-web-components registering`,
+            'You can pass an `onSetupError` to handle these.',
+            error
+            )
+        }
 
-const button1 = document.getElementById('toggle1')
-button1.addEventListener('click', () => {
-  togglePorts[0].send(1)
+    }
+
+}
+
+customElements.define('toggle-component', ElmElement)
+
+const toggle1 = document.getElementById('toggle1')
+toggle1.addEventListener('mysuperevent', () => {
+  console.log("SUPER EVENT 1")
 })
 
-const button2 = document.getElementById('toggle2')
-button2.addEventListener('click', () => {
-  togglePorts[1].send(1)
-  console.log("Clicked toggle")
-})
-
-const button3 = document.getElementById('toggle3')
-button3.addEventListener('click', () => {
-  togglePorts[2].send(1)
-  console.log("Clicked toggle")
+const toggle2 = document.getElementById('toggle2')
+toggle2.addEventListener('mysuperevent', () => {
+  console.log("SUPER EVENT 2")
 })

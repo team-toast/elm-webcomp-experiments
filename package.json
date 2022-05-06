@@ -14,7 +14,8 @@
     "prettier": {
         "singleQuote": true,
         "trailingComma": "es5",
-        "semi": false
+        "semi": false,
+        "tabWidth": 2
     },
     "devDependencies": {
         "@teamthread/elm-web-components": "^1.1.1",
