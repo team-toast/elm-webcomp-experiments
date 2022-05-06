@@ -1,27 +1,5 @@
 import "core-js/es6/object";
 const { Elm } = require("./ToggleComponent.elm");
-//const { Elm } = require("./Incrementor.elm");
-
-const camelize = str => {
-  // adapted from https://stackoverflow.com/questions/2970525/converting-any-string-into-camel-case#2970667
-  return str
-    .toLowerCase()
-    .replace(/[-_]+/g, ' ')
-    .replace(/[^\w\s]/g, '')
-    .replace(/ (.)/g, firstChar => firstChar.toUpperCase())
-    .replace(/ /g, '')
-}
-
-const getProps = el => {
-  const props = {}
-
-  for (let i = 0; i < el.attributes.length; i++) {
-    const attribute = el.attributes[i]
-    const name = camelize(attribute.name)
-    props[name] = attribute.value
-  }
-  return props
-}
 
 class ElmElement extends HTMLElement {
     constructor() 
