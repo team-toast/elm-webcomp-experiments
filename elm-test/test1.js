@@ -42,10 +42,9 @@ class ElmElement extends HTMLElement {
         node: elmDiv,
         })
         
-        elmElement.ports.sendToggle.subscribe(() => {
+        elmElement.ports.sendToggle.subscribe((message) => {
             this.dispatchEvent(new CustomEvent('mysuperevent',{
-                detail: "Hello",
-                composed: true,
+                detail: message,
             }));
         });
        
@@ -67,11 +66,11 @@ class ElmElement extends HTMLElement {
 customElements.define('toggle-component', ElmElement)
 
 const toggle1 = document.getElementById('toggle1')
-toggle1.addEventListener('mysuperevent', () => {
-  console.log("SUPER EVENT 1")
+toggle1.addEventListener('mysuperevent', (event) => {
+  console.log("SUPER EVENT 1: " + event.detail)
 })
 
 const toggle2 = document.getElementById('toggle2')
-toggle2.addEventListener('mysuperevent', () => {
-  console.log("SUPER EVENT 2")
+toggle2.addEventListener('mysuperevent', (event) => {
+  console.log("SUPER EVENT 2: " + event.detail)
 })
