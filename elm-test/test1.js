@@ -1,12 +1,12 @@
 import "core-js/es6/object";
 const { Elm } = require("./ToggleComponent.elm");
 
-class ElmElement extends HTMLElement {
+class ElmToggleElement extends HTMLElement {
     constructor() 
     {
         super();
         this._message = ""
-        this.elmElement = null
+        this.elmToggleElement = null
     }
     connectedCallback() {
 
@@ -17,12 +17,12 @@ class ElmElement extends HTMLElement {
         parentDiv.innerHTML = '<p>Hello</p>'
         parentDiv.appendChild(elmDiv)
 
-        this.elmElement = Elm.ToggleComponent.init({
+        this.elmToggleElement = Elm.ToggleComponent.init({
         //flags,
         node: elmDiv,
         })
         
-        this.elmElement.ports.sendToggle.subscribe((message) => {
+        this.elmToggleElement.ports.sendToggle.subscribe((message) => {
             this.dispatchEvent(new CustomEvent('mysuperevent',{
                 detail: message,
             }));
@@ -40,14 +40,15 @@ class ElmElement extends HTMLElement {
         }
 
     }
+    // Send data to receiving elm port
     set messageValue(value) {
         this._message = value
-        this.elmElement.ports.receiveToggle.send(1)
+        this.elmToggleElement.ports.receiveToggle.send(1)
         console.log("Setting message value to: " + value)
     }
 }
 
-customElements.define('toggle-component', ElmElement)
+customElements.define('toggle-component', ElmToggleElement)
 
 const toggle1 = document.getElementById('toggle1')
 toggle1.addEventListener('mysuperevent', (event) => {
@@ -57,5 +58,11 @@ toggle1.addEventListener('mysuperevent', (event) => {
 const toggle2 = document.getElementById('toggle2')
 toggle2.addEventListener('mysuperevent', (event) => {
   console.log("SUPER EVENT 2: " + event.detail)
+})
+
+const button1 = document.getElementById('button1')
+button1.addEventListener('click', (event) => {
+  console.log("Button clicked")
+  const toggle2 = document.getElementById('toggle2')
   toggle2.messageValue = "toggle"
 })
